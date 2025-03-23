@@ -3,17 +3,23 @@ const placesList = document.querySelector('.places__list');
 
 function removeCard(evt) {
   const eventTarget = evt.target;
-  eventTarget.parentElement.remove();
+  const listItem = eventTarget.closest('.places__item');
+  listItem.remove();
 }
 
-function addCard (element) {
+function renderCard(dataAboutPlace) {
+  const readyCard = createCard(dataAboutPlace);
+  placesList.append(readyCard);
+}
+
+function createCard(element) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   cardElement.querySelector('.card__image').src = element.link;
+  cardElement.querySelector('.card__image').alt = element.alt;
   cardElement.querySelector('.card__title').textContent = element.name;
   const deleteButton = cardElement.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', removeCard);
-  placesList.append(cardElement);
+  return cardElement;
 }
 
-initialCards.forEach(addCard);
-
+initialCards.forEach(renderCard);
