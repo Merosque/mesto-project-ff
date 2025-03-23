@@ -6,11 +6,14 @@ function removeCard(evt) {
   eventTarget.parentElement.remove();
 }
 
-initialCards.forEach(function(element) {
+function addCard (element) {
   const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
   cardElement.querySelector('.card__image').src = element.link;
   cardElement.querySelector('.card__title').textContent = element.name;
   const deleteButton = cardElement.querySelector('.card__delete-button');
   deleteButton.addEventListener('click', removeCard);
   placesList.append(cardElement);
-});
+}
+
+initialCards.forEach(addCard);
+
