@@ -3,8 +3,7 @@ const placesList = document.querySelector('.places__list');
 
 function removeCard(evt) {
   const eventTarget = evt.target;
-  const listItem = eventTarget.closest('.places__item');
-  listItem.remove();
+  eventTarget.closest('.places__item').remove();
 }
 
 function renderCard(dataAboutPlace) {
