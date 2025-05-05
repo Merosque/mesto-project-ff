@@ -1,4 +1,4 @@
-// Найдём все попапы 
+// Найдём все попапы для закрытия по клику на оверлей или на крестик
 const popups = document.querySelectorAll('.popup');
 
 // Функция открытия попапа 
@@ -39,11 +39,8 @@ popups.forEach((popup) => {
   }
 });
 
-// Кнопки открытия попапов 
+// Кнопка открытия попапов изображения
 const imagePopup = document.querySelector('.popup_type_image');
-
-// Открытие попапов по кнопкам 
-
 
 // Открытие попапа изображения по клику на изображение карточки
 document.addEventListener('click', (evt) => {

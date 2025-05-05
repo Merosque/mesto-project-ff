@@ -1,10 +1,9 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
-import './modal.js';
-import { closePopup, openPopup } from "./modal.js";
-import { renderCard } from './card.js'; // импорт логики карточек
+import { closePopup, openPopup } from "../components/modal.js";
+import { renderCard } from '../components/card.js'; // импорт логики карточек
 
-//значения по дефолту в профиле
+//значения имени и занятия по дефолту в профиле
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
@@ -13,7 +12,6 @@ const editButton = document.querySelector('.profile__edit-button');
 const editPopup = document.querySelector('.popup_type_edit');
 const newCardPopup = document.querySelector('.popup_type_new-card');
 const addCardButton = document.querySelector('.profile__add-button');
-const imagePopup = document.querySelector('.popup_type_image');
 
 // Отрисовка стартовых карточек
 initialCards.forEach(renderCard);
@@ -35,12 +33,16 @@ const handleEditProfileDefaultValue = () => {
   openPopup(editPopup);
 };
 
-addCardButton.addEventListener('click', () => {
+//Обработчик открытия формы добавления новой карточки
+const handleAddCard = () => {
   formElementAddCard.reset(); // сбрасываем поля
   openPopup(newCardPopup);
-});
+};
 
-// Прикрепляем обработчик к кнопке редактировать профиль
+// Прикрепляем обработчик открытия формы к кнопке добавить новую карточку
+addCardButton.addEventListener('click', handleAddCard);
+
+// Прикрепляем обработчик открытия формы к кнопке редактировать профиль
 editButton.addEventListener("click", handleEditProfileDefaultValue);
 
 // Обработчик отправки формы редактирования профиля
@@ -52,6 +54,8 @@ function handleFormSubmitEditProfile(evt) {
   profileName.textContent = userName;
   closePopup(editPopup);
 }
+
+// Прикрепляем обработчик отправки к кнопке "сохранить" формы редактирования профиля
 formElementEditProfile.addEventListener('submit', handleFormSubmitEditProfile);
 
 // Обработчик отправки формы добавления карточки
@@ -69,4 +73,6 @@ function handleFormSubmitAddCard(evt) {
   formElementAddCard.reset();
   closePopup(newCardPopup);
 }
+
+// Прикрепляем обработчик отправки к кнопке "сохранить" формы добавления карточки
 formElementAddCard.addEventListener('submit', handleFormSubmitAddCard);
