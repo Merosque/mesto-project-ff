@@ -40,14 +40,10 @@ popups.forEach((popup) => {
 });
 
 // Кнопки открытия попапов 
-const editButton = document.querySelector('.profile__edit-button');
-const addButton = document.querySelector('.profile__add-button');
-const editPopup = document.querySelector('.popup_type_edit');
-const newCardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
 
 // Открытие попапов по кнопкам 
-addButton.addEventListener('click', () => openPopup(newCardPopup));
+
 
 // Открытие попапа изображения по клику на изображение карточки
 document.addEventListener('click', (evt) => {
@@ -63,4 +59,4 @@ document.addEventListener('click', (evt) => {
   }
 });
 
-export { closePopup, editPopup, openPopup };
+export { closePopup, openPopup };
