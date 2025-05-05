@@ -47,7 +47,6 @@ const newCardPopup = document.querySelector('.popup_type_new-card');
 const imagePopup = document.querySelector('.popup_type_image');
 
 // Открытие попапов по кнопкам 
-editButton.addEventListener('click', () => openPopup(editPopup));
 addButton.addEventListener('click', () => openPopup(newCardPopup));
 
 // Открытие попапа изображения по клику на изображение карточки
@@ -64,4 +63,4 @@ document.addEventListener('click', (evt) => {
   }
 });
 
-export { closePopup, editPopup };
+export { closePopup, editPopup, openPopup };

@@ -1,14 +1,18 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
 import './modal.js';
-import { closePopup, editPopup } from "./modal.js";
+import { closePopup, editPopup, openPopup } from "./modal.js";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
 
 //значения по дефолту в профиле
-const profileTitle = document.querySelector(".profile__title");
+const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+
+//кнопка редактирования профиля
+const editButton = document.querySelector('.profile__edit-button');
+
 
 function removeCard(evt) {
   const eventTarget = evt.target;
@@ -43,10 +47,14 @@ const jobInput = document.querySelector('.popup__input_type_description')
 
 //Обработчик открытия формы редактирования профиля и подставка дефолтных значений
 const handleEditProfileDefaultValue = () => {
-  nameInput.value = profileTitle.textContent;
+  nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
   openPopup(editPopup);
 };
+
+// Прикрепляем обработчик к кнопке редактировать профиль:
+// он будет следить за событием нажатием кнопки
+editButton.addEventListener("click", handleEditProfileDefaultValue);
 
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
@@ -61,7 +69,7 @@ function handleFormSubmit(evt) {
 
     // Вставьте новые значения с помощью textContent
     profileDescription.textContent = userJob;
-    profileTitle.textContent = userName;
+    profileName.textContent = userName;
     closePopup(editPopup);
 }
 
