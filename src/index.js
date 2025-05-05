@@ -1,5 +1,6 @@
-import '../pages/index.css';
+import './pages/index.css';
 import { initialCards } from './cards.js';
+import './modal.js';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
