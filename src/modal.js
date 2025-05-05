@@ -63,3 +63,5 @@ document.addEventListener('click', (evt) => {
     openPopup(imagePopup);
   }
 });
+
+export { closePopup, editPopup };

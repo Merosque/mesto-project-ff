@@ -1,9 +1,14 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
 import './modal.js';
+import { closePopup, editPopup } from "./modal.js";
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
+
+//значения по дефолту в профиле
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 
 function removeCard(evt) {
   const eventTarget = evt.target;
@@ -36,6 +41,13 @@ const nameInput = document.querySelector('.popup__input_type_name')
 const jobInput = document.querySelector('.popup__input_type_description')
 // Воспользуйтесь инструментом .querySelector()
 
+//Обработчик открытия формы редактирования профиля и подставка дефолтных значений
+const handleEditProfileDefaultValue = () => {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+  openPopup(editPopup);
+};
+
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function handleFormSubmit(evt) {
@@ -46,16 +58,15 @@ function handleFormSubmit(evt) {
     // Получите значение полей jobInput и nameInput из свойства value
     const userJob = jobInput.value;
     const userName = nameInput.value;
-       
-    // Выберите элементы, куда должны быть вставлены значения полей
-    const profileTitle = document.querySelector(".profile__title");
-    const profileDescription = document.querySelector(".profile__description");
 
     // Вставьте новые значения с помощью textContent
     profileDescription.textContent = userJob;
     profileTitle.textContent = userName;
+    closePopup(editPopup);
 }
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formElement.addEventListener('submit', handleFormSubmit);
+
+//Обработчик открытия формы редактирования профиля и подставка дефолтных значений
