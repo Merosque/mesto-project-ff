@@ -23,37 +23,12 @@ function handleEscClose(evt) {
   }
 }
 
-// Закрытие попапа по клику на оверлей или на крестик 
+// Закрытие попапа по клику на крестик 
 popups.forEach((popup) => {
-  // Клик по оверлею
-  popup.addEventListener('mousedown', (evt) => {
-    if (evt.target === popup) {
-      closePopup(popup);
-    }
-  });
-
-  // Клик по крестику
   const closeButton = popup.querySelector('.popup__close');
   if (closeButton) {
     closeButton.addEventListener('click', () => closePopup(popup));
   }
 });
 
-// Кнопка открытия попапов изображения
-const imagePopup = document.querySelector('.popup_type_image');
-
-// Открытие попапа изображения по клику на изображение карточки
-document.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('card__image')) {
-    const popupImage = imagePopup.querySelector('.popup__image');
-    const popupCaption = imagePopup.querySelector('.popup__caption');
-
-    popupImage.src = evt.target.src;
-    popupImage.alt = evt.target.alt;
-    popupCaption.textContent = evt.target.alt;
-
-    openPopup(imagePopup);
-  }
-});
-
-export { closePopup, openPopup };
+export { closePopup, openPopup, popups };

@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
-import { closePopup, openPopup } from "../components/modal.js";
-import { renderCard } from '../components/card.js'; // импорт логики карточек
+import { closePopup, openPopup, popups } from "./components/modal.js";
+import { createCard, handleLikeClick, handleDeleteCard, handleImageClick } from './components/card.js'; // импорт логики карточек
 
 //значения имени и занятия по дефолту в профиле
 const profileName = document.querySelector(".profile__title");
@@ -12,6 +12,16 @@ const editButton = document.querySelector('.profile__edit-button');
 const editPopup = document.querySelector('.popup_type_edit');
 const newCardPopup = document.querySelector('.popup_type_new-card');
 const addCardButton = document.querySelector('.profile__add-button');
+
+//DOM элемент списка мест
+const placesList = document.querySelector('.places__list');
+
+// Функция добавления карточки в начало
+function renderCard(dataAboutPlace) {
+  const readyCard = createCard(dataAboutPlace, handleLikeClick, handleDeleteCard,
+  handleImageClick);
+  placesList.prepend(readyCard); // Добавляем в начало
+}
 
 // Отрисовка стартовых карточек
 initialCards.forEach(renderCard);
@@ -68,7 +78,12 @@ function handleFormSubmitAddCard(evt) {
     name: userPlaceName,
     link: userPlaceUrl,
     alt: userPlaceName
-  });
+  },
+  
+  handleLikeClick,
+  handleDeleteCard,
+  handleImageClick
+);
 
   formElementAddCard.reset();
   closePopup(newCardPopup);
@@ -76,3 +91,14 @@ function handleFormSubmitAddCard(evt) {
 
 // Прикрепляем обработчик отправки к кнопке "сохранить" формы добавления карточки
 formElementAddCard.addEventListener('submit', handleFormSubmitAddCard);
+
+// Закрытие попапа по клику на оверлей
+popups.forEach((popup) => {
+  popup.addEventListener('mousedown', (evt) => {
+    if (evt.target === popup) {
+      closePopup(popup);
+    }
+  })
+});
+
+
