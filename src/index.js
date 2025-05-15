@@ -30,10 +30,11 @@ initialCards.forEach(renderCard);
 const formElementEditProfile = document.querySelector(".popup__form[name='edit-profile']");
 const formElementAddCard = document.querySelector(".popup__form[name='new-place']");
 
+
 // Находим поля формы в DOM
 const userNameInput = document.querySelector('.popup__input_type_name');
-const placeNameInput = document.querySelector('.popup__input_type_card-name');
 const jobInput = document.querySelector('.popup__input_type_description');
+const placeNameInput = document.querySelector('.popup__input_type_card-name');
 const placeLinkInput = document.querySelector('.popup__input_type_url');
 
 //Обработчик открытия формы редактирования профиля и подставка дефолтных значений
@@ -41,12 +42,14 @@ const handleEditProfileDefaultValue = () => {
   userNameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
   openPopup(editPopup);
+  clearValidation(formElementEditProfile, validationConfig);
 };
 
 //Обработчик открытия формы добавления новой карточки
 const handleAddCard = () => {
   formElementAddCard.reset(); // сбрасываем поля
   openPopup(newCardPopup);
+  clearValidation(formElementAddCard, validationConfig);
 };
 
 // Прикрепляем обработчик открытия формы к кнопке добавить новую карточку
@@ -101,4 +104,15 @@ popups.forEach((popup) => {
   })
 });
 
+import { enableValidation, clearValidation } from './components/validation.js';
 
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'form__input-error_active'
+};
+
+enableValidation(validationConfig);
