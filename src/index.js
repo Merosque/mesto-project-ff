@@ -1,11 +1,12 @@
 import './pages/index.css';
-import { initialCards } from './cards.js';
 import { closePopup, openPopup, popups } from "./components/modal.js";
 import { createCard, handleLikeClick, handleDeleteCard, handleImageClick } from './components/card.js'; // импорт логики карточек
+import { getUserInfo, getInitialCards, updateUserInfo } from './components/api.js'; // импорт API-функций
 
 //значения имени и занятия по дефолту в профиле
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileAvatar = document.querySelector(".profile__image"); // для отображения аватара
 
 //кнопки
 const editButton = document.querySelector('.profile__edit-button');
@@ -14,22 +15,38 @@ const newCardPopup = document.querySelector('.popup_type_new-card');
 const addCardButton = document.querySelector('.profile__add-button');
 
 //DOM элемент списка мест
-const placesList = document.querySelector('.places__list');
+let placesList = document.querySelector('.places__list');
 
 // Функция добавления карточки в начало
 function renderCard(dataAboutPlace) {
-  const readyCard = createCard(dataAboutPlace, handleLikeClick, handleDeleteCard,
-  handleImageClick);
+  const readyCard = createCard(dataAboutPlace, handleLikeClick, handleDeleteCard, handleImageClick);
   placesList.prepend(readyCard); // Добавляем в начало
 }
 
-// Отрисовка стартовых карточек
-initialCards.forEach(renderCard);
+// Загрузка информации о пользователе и карточек с сервера
+document.addEventListener('DOMContentLoaded', () => {
+  // Загружаем данные о пользователе и карточки параллельно с использованием Promise.all
+  Promise.all([getUserInfo(), getInitialCards()])
+    .then(([userData, cards]) => {
+      // Обновляем DOM с полученными данными о пользователе
+      profileName.textContent = userData.name;
+      profileDescription.textContent = userData.about;
+      profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+
+      // Отображаем карточки
+        cards.forEach((cardData) => {
+          const cardElement = createCard(cardData, handleLikeClick, handleDeleteCard, handleImageClick);
+          placesList.appendChild(cardElement);
+        });
+    })
+    .catch((error) => {
+      console.error('Ошибка при загрузке данных:', error);
+    });
+});
 
 // Находим формы в DOM
 const formElementEditProfile = document.querySelector(".popup__form[name='edit-profile']");
 const formElementAddCard = document.querySelector(".popup__form[name='new-place']");
-
 
 // Находим поля формы в DOM
 const userNameInput = document.querySelector('.popup__input_type_name');
@@ -60,12 +77,22 @@ editButton.addEventListener("click", handleEditProfileDefaultValue);
 
 // Обработчик отправки формы редактирования профиля
 function handleFormSubmitEditProfile(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+  evt.preventDefault();
   const userJob = jobInput.value;
   const userName = userNameInput.value;
-  profileDescription.textContent = userJob;
-  profileName.textContent = userName;
-  closePopup(editPopup);
+
+  evt.submitter.textContent = 'Сохранение...'; // улучшение UX (задача 11)
+
+  updateUserInfo(userName, userJob)
+    .then((data) => {
+      profileName.textContent = data.name;
+      profileDescription.textContent = data.about;
+      closePopup(editPopup);
+    })
+    .catch(err => console.error('Ошибка при обновлении профиля:', err))
+    .finally(() => {
+      evt.submitter.textContent = 'Сохранить';
+    });
 }
 
 // Прикрепляем обработчик отправки к кнопке "сохранить" формы редактирования профиля
@@ -82,7 +109,6 @@ function handleFormSubmitAddCard(evt) {
     link: userPlaceUrl,
     alt: userPlaceName
   },
-  
   handleLikeClick,
   handleDeleteCard,
   handleImageClick
