@@ -1,5 +1,5 @@
 import { openPopup } from './modal.js';
-import { putLike, deleteLike } from './api.js';  // Импортируем функции для работы с лайками
+import { putLike, deleteLike, deleteCard } from './api.js';  // Импортируем функции для работы с лайками
 
 const cardTemplate = document.querySelector('#card-template').content;
 const imagePopup = document.querySelector('.popup_type_image');
@@ -7,9 +7,18 @@ const popupImage = imagePopup.querySelector('.popup__image');
 const popupCaption = imagePopup.querySelector('.popup__caption');
 
 // Функция удаления карточки
-function handleDeleteCard(evt) {
+function handleDeleteCard(evt, cardId) {
   const eventTarget = evt.target;
   eventTarget.closest('.places__item').remove();
+
+   // Отправляем запрос на удаление карточки с сервера
+   deleteCard(cardId)
+   .then((data) => {
+     console.log('Карточка удалена с сервера:', data);
+   })
+   .catch((error) => {
+     console.error('Ошибка при удалении карточки:', error);
+   });
 }
 
 // Функция копирования клонированного шаблона карточки
@@ -71,8 +80,15 @@ if (element.likes && element.currentUserId) {
   }
 }
 
+// Скрываем кнопку удаления, если карточка не принадлежит текущему пользователю
+if (element.owner._id !== element.currentUserId) {
+  deleteButton.style.display = 'none';
+} else {
+  // Если это моя карточка, прикрепляем обработчик удаления
+  deleteButton.addEventListener('click', (evt) => handleDeleteCard(evt, element._id));
+}
+
   cardImage.addEventListener('click', () => handleImageClick(element));
-  deleteButton.addEventListener('click', handleDeleteCard);
   likeButton.addEventListener('click', () => handleLikeClick(element, likeButton, likeCounter));
 
   return cardElement;

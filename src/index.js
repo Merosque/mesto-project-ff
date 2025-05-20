@@ -32,9 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
       profileName.textContent = userData.name;
       profileDescription.textContent = userData.about;
       profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+      profileName.dataset.userId = userData._id; 
 
       // Отображаем карточки
         cards.forEach((cardData) => {
+        // Передаем currentUserId в данные карточки
+          cardData.currentUserId = userData._id; // Добавляем currentUserId
+
           const cardElement = createCard(cardData, handleLikeClick, handleDeleteCard, handleImageClick);
           placesList.appendChild(cardElement);
         });
@@ -81,17 +85,14 @@ function handleFormSubmitEditProfile(evt) {
   const userJob = jobInput.value;
   const userName = userNameInput.value;
 
-  evt.submitter.textContent = 'Сохранение...'; // улучшение UX (задача 11)
-
   updateUserInfo(userName, userJob)
     .then((data) => {
       profileName.textContent = data.name;
       profileDescription.textContent = data.about;
       closePopup(editPopup);
     })
-    .catch(err => console.error('Ошибка при обновлении профиля:', err))
-    .finally(() => {
-      evt.submitter.textContent = 'Сохранить';
+    .catch(err => {
+      console.error('Ошибка при обновлении профиля:', err);
     });
 }
 
@@ -108,11 +109,17 @@ function handleFormSubmitAddCard(evt) {
  // Отправляем данные на сервер
  addNewCard(userPlaceName, userPlaceUrl)
  .then((newCardData) => {
+  // Передаем currentUserId в данные карточки
+  newCardData.currentUserId = profileName.dataset.userId;
+
    // Добавляем карточку на страницу
    renderCard({
-     name: newCardData.name,
-     link: newCardData.link,
-     alt: newCardData.name
+      name: newCardData.name,
+      link: newCardData.link,
+      alt: newCardData.name,
+      likes: newCardData.likes,
+      currentUserId: newCardData.currentUserId, // Передаем currentUserId в карточку
+      owner: newCardData.owner,
    });
    
    // Закрываем попап и сбрасываем форму
