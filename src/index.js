@@ -1,7 +1,7 @@
 import './pages/index.css';
 import { closePopup, openPopup, popups } from "./components/modal.js";
 import { createCard, handleLikeClick, handleDeleteCard, handleImageClick } from './components/card.js'; // импорт логики карточек
-import { getUserInfo, getInitialCards, updateUserInfo } from './components/api.js'; // импорт API-функций
+import { getUserInfo, getInitialCards, updateUserInfo, addNewCard } from './components/api.js'; // импорт API-функций
 
 //значения имени и занятия по дефолту в профиле
 const profileName = document.querySelector(".profile__title");
@@ -101,21 +101,27 @@ formElementEditProfile.addEventListener('submit', handleFormSubmitEditProfile);
 // Обработчик отправки формы добавления карточки
 function handleFormSubmitAddCard(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+
   const userPlaceName = placeNameInput.value;
   const userPlaceUrl = placeLinkInput.value;
 
-  renderCard({
-    name: userPlaceName,
-    link: userPlaceUrl,
-    alt: userPlaceName
-  },
-  handleLikeClick,
-  handleDeleteCard,
-  handleImageClick
-);
-
-  formElementAddCard.reset();
-  closePopup(newCardPopup);
+ // Отправляем данные на сервер
+ addNewCard(userPlaceName, userPlaceUrl)
+ .then((newCardData) => {
+   // Добавляем карточку на страницу
+   renderCard({
+     name: newCardData.name,
+     link: newCardData.link,
+     alt: newCardData.name
+   });
+   
+   // Закрываем попап и сбрасываем форму
+   formElementAddCard.reset();
+   closePopup(newCardPopup);
+ })
+ .catch((error) => {
+   console.error('Ошибка при добавлении карточки:', error);
+ });
 }
 
 // Прикрепляем обработчик отправки к кнопке "сохранить" формы добавления карточки

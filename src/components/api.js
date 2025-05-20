@@ -43,3 +43,21 @@ export const updateUserInfo = (name, about) => {
     return Promise.reject(`Ошибка: ${res.status}`);
   });
 };
+
+//Добавить новую карточку на сервер
+export const addNewCard = (name, link) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({
+      name: name,
+      link: link
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    });
+};
