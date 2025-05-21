@@ -1,8 +1,9 @@
 import './pages/index.css';
 import { closePopup, openPopup, popups } from "./components/modal.js";
-import { createCard, handleLikeClick, handleDeleteCard, handleImageClick } from './components/card.js'; // импорт логики карточек
+import { createCard, handleLikeClick, handleDeleteCard } from './components/card.js'; // импорт логики карточек
 import { getUserInfo, getInitialCards, updateUserInfo, addNewCard, updateAvatar } from './components/api.js'; // импорт API-функций
 import { enableValidation, clearValidation } from './components/validation.js';
+import { handleButtonState } from './components/utils.js';
 
 //значения имени и занятия по дефолту в профиле
 const profileName = document.querySelector(".profile__title");
@@ -16,7 +17,12 @@ const newCardPopup = document.querySelector('.popup_type_new-card');
 const addCardButton = document.querySelector('.profile__add-button');
 
 //DOM элемент списка мест
-let placesList = document.querySelector('.places__list');
+const placesList = document.querySelector('.places__list');
+
+//DOM элемент попапа изображения и подписи
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
+const imagePopup = document.querySelector('.popup_type_image');
 
 // Функция добавления карточки в начало
 function renderCard(dataAboutPlace) {
@@ -61,17 +67,13 @@ const jobInput = document.querySelector('.popup__input_type_description');
 const placeNameInput = document.querySelector('.popup__input_type_card-name');
 const placeLinkInput = document.querySelector('.popup__input_type_url');
 
-//функция изменения текста на кнопке и блокировки кнопки
-function handleButtonState(submitButton, isLoading) {
-  if (isLoading) {
-    submitButton.textContent = 'Сохранение...';  // Изменяем текст на кнопке на "Сохранение..."
-    submitButton.disabled = true;  // Отключаем кнопку, чтобы избежать повторных кликов
-  } else {
-    submitButton.textContent = 'Сохранить';  // Восстанавливаем исходный текст
-    submitButton.disabled = false;  // Включаем кнопку обратно
-  }
+// Функция открытия попапа изображения по клику на изображение карточки
+function handleImageClick(element) {
+  popupImage.src = element.link;
+  popupImage.alt = element.alt;
+  popupCaption.textContent = element.alt;
+  openPopup(imagePopup);
 }
-
 
 //Обработчик открытия формы редактирования профиля и подставка дефолтных значений
 const handleEditProfileDefaultValue = () => {
@@ -85,7 +87,6 @@ const handleEditProfileDefaultValue = () => {
 const handleAddCard = () => {
   formElementAddCard.reset(); // сбрасываем поля
   openPopup(newCardPopup);
-  clearValidation(formElementAddCard, validationConfig);
 };
 
 // Прикрепляем обработчик открытия формы к кнопке добавить новую карточку
@@ -147,6 +148,7 @@ function handleFormSubmitAddCard(evt) {
    
    // Закрываем попап и сбрасываем форму
    formElementAddCard.reset();
+   clearValidation(formElementAddCard, validationConfig);
    closePopup(newCardPopup);
  })
  .catch((error) => {

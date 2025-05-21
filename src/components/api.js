@@ -36,12 +36,7 @@ export const updateUserInfo = (name, about) => {
     headers: config.headers,
     body: JSON.stringify({ name, about })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(handleResponse);
 };
 
 //Добавить новую карточку на сервер
@@ -54,12 +49,7 @@ export const addNewCard = (name, link) => {
       link: link
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(handleResponse);
 };
 
 //PUT-запрос для добавления лайка
@@ -68,12 +58,7 @@ export const putLike = (cardId) => {
     method: 'PUT',
     headers: config.headers,
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(handleResponse);
 };
 
 //DELETE-запрос для удаления лайка
@@ -82,12 +67,7 @@ export const deleteLike = (cardId) => {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(handleResponse);
 };
 
 //запрос удаления карточки на сервер
@@ -96,12 +76,7 @@ export const deleteCard = (cardId) => {
     method: 'DELETE',
     headers: config.headers,
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(handleResponse);
 };
 
 //обновление аватарки
@@ -113,10 +88,5 @@ export const updateAvatar = (avatarUrl) => {
       avatar: avatarUrl
     })
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  .then(handleResponse);
 };

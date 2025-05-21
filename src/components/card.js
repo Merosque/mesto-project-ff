@@ -1,20 +1,19 @@
-import { openPopup } from './modal.js';
 import { putLike, deleteLike, deleteCard } from './api.js';  // Импортируем функции для работы с лайками
 
 const cardTemplate = document.querySelector('#card-template').content;
-const imagePopup = document.querySelector('.popup_type_image');
-const popupImage = imagePopup.querySelector('.popup__image');
-const popupCaption = imagePopup.querySelector('.popup__caption');
+
+
 
 // Функция удаления карточки
 function handleDeleteCard(evt, cardId) {
   const eventTarget = evt.target;
-  eventTarget.closest('.places__item').remove();
 
    // Отправляем запрос на удаление карточки с сервера
    deleteCard(cardId)
    .then((data) => {
      console.log('Карточка удалена с сервера:', data);
+     // Удаляем карточку из DOM только после успешного ответа удаления с сервера
+     eventTarget.closest('.places__item').remove();
    })
    .catch((error) => {
      console.error('Ошибка при удалении карточки:', error);
@@ -46,14 +45,6 @@ function handleLikeClick(element, likeButton, likeCounter) {
       })
       .catch((error) => console.error('Ошибка при добавлении лайка:', error));
   }
-}
-
-// Функция открытия попапа изображения по клику на изображение карточки
-function handleImageClick(element) {
-  popupImage.src = element.link;
-  popupImage.alt = element.alt;
-  popupCaption.textContent = element.alt;
-  openPopup(imagePopup);
 }
 
 // Функция создания карточки
@@ -94,4 +85,4 @@ if (element.owner._id !== element.currentUserId) {
   return cardElement;
 }
 
-export { createCard, handleLikeClick, handleDeleteCard, handleImageClick };
+export { createCard, handleLikeClick, handleDeleteCard };
